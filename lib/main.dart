@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:muvver/views/home.dart';
+import 'package:muvver/views/home/home.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      title: 'Muvver',
-      theme: ThemeData(primarySwatch: Colors.grey),
+    const MaterialApp(
+      title: 'Muvver',     
+      debugShowCheckedModeBanner: false,
       home: Home(),
     ),
   );
