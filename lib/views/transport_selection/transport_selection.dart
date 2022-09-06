@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:muvver/models/transport_model.dart';
-import 'package:muvver/views/transport_selection/components/transport_list_tile_widget.dart';
+import 'package:muvver/views/destiny_selection/destiny_selection.dart';
 
 class TransportSelection extends StatefulWidget {
   const TransportSelection({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _TransportSelectionState extends State<TransportSelection> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return SafeArea(   
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -60,7 +60,7 @@ class _TransportSelectionState extends State<TransportSelection> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(top: 10, left: 10),
+                padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
                 alignment: Alignment.topLeft,
                 child: const Text(
                   'Transporte',
@@ -72,6 +72,7 @@ class _TransportSelectionState extends State<TransportSelection> {
                 shrinkWrap: true,
                 itemBuilder: ((context, index) {
                   return ListTile(
+                    selectedTileColor: const Color.fromRGBO(53, 55, 64, 1),
                     selectedColor: const Color.fromRGBO(36, 185, 110, 1),
                     title: Text(allTransports[index].name),
                     selected: index == _selectedIndex,
@@ -83,6 +84,28 @@ class _TransportSelectionState extends State<TransportSelection> {
                     trailing: const Icon(Icons.circle_rounded),
                   );
                 }),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: 45,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromRGBO(36, 185, 110, 1),
+                  ),
+                  child: const Text(
+                    'SALVAR',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  //TODO
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: ((context) => DestinySelection()),
+                      ),
+                    );
+                  },
+                ),
               )
             ],
           ),
