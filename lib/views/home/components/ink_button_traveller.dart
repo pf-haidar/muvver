@@ -47,6 +47,7 @@ Widget inkButtonTraveller(BuildContext context) {
               padding: const EdgeInsets.only(right: 15),
               child: SvgPicture.asset(
                 'assets/images/delivery-truck.svg',
+                color: Colors.blue,
               ),
             ),
           ],

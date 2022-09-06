@@ -23,6 +23,8 @@ class _TransportSelectionState extends State<TransportSelection> {
     Transport(name: 'Embarcação'),
   ];
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,10 +71,17 @@ class _TransportSelectionState extends State<TransportSelection> {
                 itemCount: allTransports.length,
                 shrinkWrap: true,
                 itemBuilder: ((context, index) {
-                  return TransportListTileWidget(
-                      transport: allTransports[index],
-                      isSelected: false,
-                      onSelectedTransport: selectTransport);
+                  return ListTile(
+                    selectedColor: const Color.fromRGBO(36, 185, 110, 1),
+                    title: Text(allTransports[index].name),
+                    selected: index == _selectedIndex,
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    trailing: const Icon(Icons.circle_rounded),
+                  );
                 }),
               )
             ],
