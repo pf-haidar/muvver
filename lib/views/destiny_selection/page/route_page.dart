@@ -45,123 +45,150 @@ class _RoutePageState extends State<RoutePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 25, left: 10, right: 10),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 1,
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 25, left: 15),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Selecione a data e rota da sua viagem',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 25, left: 10, right: 10),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 1,
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 25, left: 25),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Selecione a data e rota da sua viagem',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.42,
-                    child: TextField(
-                      controller: controllerChegada,
-                      onTap: () async {
-                        DateTime? newDate = await showDatePicker(
-                          locale: const Locale('pt'),
-                          context: context,
-                          initialDate: date,
-                          firstDate: DateTime(2022),
-                          lastDate: DateTime(2030),
-                        );
-                        if (newDate == null) return;
-                        setState(() {
-                          controllerChegada.text =
-                              DateFormat("dd/MM/yyyy").format(newDate);
-                        });
-                      },
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "Data de partida",
-                        border: OutlineInputBorder(),
+                Container(
+                  margin: const EdgeInsets.only(left: 25, right: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.42,
+                        child: TextField(
+                          controller: controllerChegada,
+                          onTap: () async {
+                            DateTime? newDate = await showDatePicker(
+                              locale: const Locale('pt'),
+                              context: context,
+                              initialDate: date,
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime(2030),
+                            );
+                            if (newDate == null) return;
+                            setState(() {
+                              controllerChegada.text =
+                                  DateFormat("dd/MM/yyyy").format(newDate);
+                            });
+                          },
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: "Data de partida",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.42,
-                    child: TextField(
-                      controller: controllerPartida,
-                      onTap: () async {
-                        DateTime? newDate = await showDatePicker(
-                          locale: const Locale('pt'),
-                          context: context,
-                          initialDate: date,
-                          firstDate: DateTime(2022),
-                          lastDate: DateTime(2030),
-                        );
-                        if (newDate == null) return;
-                        setState(() {
-                          controllerPartida.text =
-                              DateFormat("dd/MM/yyyy").format(newDate);
-                        });
-                      },
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: "Data de chegada",
-                        border: OutlineInputBorder(),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.42,
+                        child: TextField(
+                          controller: controllerPartida,
+                          onTap: () async {
+                            DateTime? newDate = await showDatePicker(
+                              locale: const Locale('pt'),
+                              context: context,
+                              initialDate: date,
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime(2030),
+                            );
+                            if (newDate == null) return;
+                            setState(() {
+                              controllerPartida.text =
+                                  DateFormat("dd/MM/yyyy").format(newDate);
+                            });
+                          },
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            labelText: "Data de chegada",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width * 0.89,
-                child: TextField(
-                  onChanged: (value) {
-                    if (_debounce?.isActive ?? false) _debounce!.cancel();
-                    _debounce = Timer(const Duration(seconds: 1), () {
-                      if (value.isNotEmpty) {
-                        autoCompleteSearch(value);
-                      } else {}
-                    });
-                  },
-                  controller: controllerCidadeOrigem,
-                  decoration: InputDecoration(
-                    labelText: "Cidade de Origem",
-                    border: OutlineInputBorder(),
+                    ],
                   ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width * 0.89,
-                child: TextField(
-                  controller: controllerCidadeDestino,
-                  decoration: InputDecoration(
-                    labelText: "Cidade de Destino",
-                    border: OutlineInputBorder(),
+                Container(
+                  margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
+                  child: TextField(
+                    onChanged: (value) {
+                      if (_debounce?.isActive ?? false) _debounce!.cancel();
+                      _debounce = Timer(const Duration(seconds: 1), () {
+                        if (value.isNotEmpty) {
+                          autoCompleteSearch(value);
+                        } else {}
+                      });
+                    },
+                    controller: controllerCidadeOrigem,
+                    decoration: InputDecoration(
+                      labelText: "Cidade de Origem",
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: predictions.length,
-                itemBuilder: ((context, index) {
-                  return ListTile(
-                    leading: const CircleAvatar(
-                      child: Icon(Icons.pin_drop, color: Colors.white),
+                Container(
+                  margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
+                  child: TextField(
+                    controller: controllerCidadeDestino,
+                    onChanged: (value) {
+                      if (_debounce?.isActive ?? false) _debounce!.cancel();
+                      _debounce = Timer(const Duration(seconds: 1), () {
+                        if (value.isNotEmpty) {
+                          autoCompleteSearch(value);
+                        } else {}
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Cidade de Destino",
+                      border: OutlineInputBorder(),
                     ),
-                    title: Text(
-                      predictions[index].description.toString(),
+                  ),
+                ),
+                ListView.builder(
+                  padding: const EdgeInsets.only(top: 10),
+                  shrinkWrap: true,
+                  itemCount: predictions.length,
+                  itemBuilder: ((context, index) {
+                    return ListTile(
+                      onTap: () {},
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.pin_drop, color: Colors.white),
+                      ),
+                      title: Text(
+                        predictions[index].description.toString(),
+                      ),
+                    );
+                  }),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(36, 185, 110, 1),
                     ),
-                  );
-                }),
-              )
-            ],
+                    child: const Text(
+                      'AVANÇAR',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: (){},
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
