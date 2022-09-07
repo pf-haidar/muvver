@@ -17,20 +17,36 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   DateTime date = DateTime.now();
-  TextEditingController controllerPartida = TextEditingController();
-  TextEditingController controllerChegada = TextEditingController();
-  TextEditingController controllerCidadeOrigem = TextEditingController();
-  TextEditingController controllerCidadeDestino = TextEditingController();
+  TextEditingController controllerDeparture = TextEditingController();
+  TextEditingController controllerArrival = TextEditingController();
+  TextEditingController controllerOriginCity = TextEditingController();
+  TextEditingController controllerTargetCity = TextEditingController();
   PageRouteController controller = PageRouteController();
 
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   Timer? _debounce;
 
+  DetailsResult? startPosition;
+  DetailsResult? endPosition;
+
+  late FocusNode startFocusNode;
+  late FocusNode endFocusNode;
+
   @override
   void initState() {
     super.initState();
     googlePlace = GooglePlace(controller.apiKey);
+
+    startFocusNode = FocusNode();
+    endFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    startFocusNode.dispose();
+    endFocusNode.dispose();
   }
 
   void autoCompleteSearch(String value) async {
@@ -71,7 +87,7 @@ class _RoutePageState extends State<RoutePage> {
                       Container(
                         width: MediaQuery.of(context).size.width * 0.42,
                         child: TextField(
-                          controller: controllerChegada,
+                          controller: controllerArrival,
                           onTap: () async {
                             DateTime? newDate = await showDatePicker(
                               locale: const Locale('pt'),
@@ -82,7 +98,7 @@ class _RoutePageState extends State<RoutePage> {
                             );
                             if (newDate == null) return;
                             setState(() {
-                              controllerChegada.text =
+                              controllerArrival.text =
                                   DateFormat("dd/MM/yyyy").format(newDate);
                             });
                           },
@@ -96,7 +112,7 @@ class _RoutePageState extends State<RoutePage> {
                       Container(
                         width: MediaQuery.of(context).size.width * 0.42,
                         child: TextField(
-                          controller: controllerPartida,
+                          controller: controllerDeparture,
                           onTap: () async {
                             DateTime? newDate = await showDatePicker(
                               locale: const Locale('pt'),
@@ -107,7 +123,7 @@ class _RoutePageState extends State<RoutePage> {
                             );
                             if (newDate == null) return;
                             setState(() {
-                              controllerPartida.text =
+                              controllerDeparture.text =
                                   DateFormat("dd/MM/yyyy").format(newDate);
                             });
                           },
@@ -124,6 +140,12 @@ class _RoutePageState extends State<RoutePage> {
                 Container(
                   margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
                   child: TextField(
+                    controller: controllerOriginCity,
+                    focusNode: startFocusNode,
+                    decoration: const InputDecoration(
+                      labelText: "Cidade de Origem",
+                      border: OutlineInputBorder(),
+                    ),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(seconds: 1), () {
@@ -132,17 +154,18 @@ class _RoutePageState extends State<RoutePage> {
                         } else {}
                       });
                     },
-                    controller: controllerCidadeOrigem,
-                    decoration: InputDecoration(
-                      labelText: "Cidade de Origem",
-                      border: OutlineInputBorder(),
-                    ),
+                    
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20, left: 25, right: 25),
                   child: TextField(
-                    controller: controllerCidadeDestino,
+                    controller: controllerTargetCity,
+                    focusNode: endFocusNode,
+                    decoration: const InputDecoration(
+                      labelText: "Cidade de Destino",
+                      border: OutlineInputBorder(),
+                    ),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(seconds: 1), () {
@@ -151,10 +174,7 @@ class _RoutePageState extends State<RoutePage> {
                         } else {}
                       });
                     },
-                    decoration: InputDecoration(
-                      labelText: "Cidade de Destino",
-                      border: OutlineInputBorder(),
-                    ),
+                    
                   ),
                 ),
                 ListView.builder(
@@ -163,8 +183,29 @@ class _RoutePageState extends State<RoutePage> {
                   itemCount: predictions.length,
                   itemBuilder: ((context, index) {
                     return ListTile(
-                      onTap: () {},
+                      onTap: () async {
+                        final placeId = predictions[index].placeId;
+                        final details = await googlePlace.details.get(placeId!);
+                        if (details != null &&
+                            details.result != null &&
+                            mounted) {
+                          if (startFocusNode.hasFocus) {
+                            setState(() {
+                              startPosition = details.result;
+                              controllerOriginCity.text = details.result!.name!;
+                              predictions = [];
+                            });
+                          } else {
+                            setState(() {
+                              endPosition = details.result;
+                              controllerTargetCity.text = details.result!.name!;
+                              predictions = [];
+                            });
+                          }
+                        }
+                      },
                       leading: const CircleAvatar(
+                        backgroundColor: Color.fromRGBO(36, 185, 110, 1),
                         child: Icon(Icons.pin_drop, color: Colors.white),
                       ),
                       title: Text(
@@ -184,7 +225,7 @@ class _RoutePageState extends State<RoutePage> {
                       'AVANÇAR',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: (){},
+                    onPressed: () {},
                   ),
                 )
               ],
