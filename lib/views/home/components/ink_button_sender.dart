@@ -53,18 +53,18 @@ Widget inkButtonSender(BuildContext context) {
 }
 
 void showModal(BuildContext context, String title) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        content: Text(title),
-        actions: <TextButton>[
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Fechar'),
-          )
-        ],
-      ),
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      content: Text(title),
+      actions: <TextButton>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Fechar'),
+        )
+      ],
+    ),
+  );
+}

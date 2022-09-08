@@ -7,9 +7,11 @@ import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:muvver/controllers/page_route_controller.dart';
+import 'package:muvver/views/destiny_selection/page/map_page.dart';
+import 'package:muvver/views/map_screen/map_screen.dart';
 
 class RoutePage extends StatefulWidget {
-  RoutePage({Key? key}) : super(key: key);
+  RoutePage({Key? key, }) : super(key: key);
 
   @override
   State<RoutePage> createState() => _RoutePageState();
@@ -85,7 +87,7 @@ class _RoutePageState extends State<RoutePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.42,
+                        width: MediaQuery.of(context).size.width * 0.38,
                         child: TextField(
                           controller: controllerArrival,
                           onTap: () async {
@@ -110,7 +112,7 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.42,
+                        width: MediaQuery.of(context).size.width * 0.38,
                         child: TextField(
                           controller: controllerDeparture,
                           onTap: () async {
@@ -126,6 +128,7 @@ class _RoutePageState extends State<RoutePage> {
                               controllerDeparture.text =
                                   DateFormat("dd/MM/yyyy").format(newDate);
                             });
+                            print(controllerDeparture.text);
                           },
                           readOnly: true,
                           decoration: InputDecoration(
@@ -142,19 +145,33 @@ class _RoutePageState extends State<RoutePage> {
                   child: TextField(
                     controller: controllerOriginCity,
                     focusNode: startFocusNode,
-                    decoration: const InputDecoration(
-                      labelText: "Cidade de Origem",
-                      border: OutlineInputBorder(),
-                    ),
+                    decoration: InputDecoration(
+                        labelText: "Cidade de Origem",
+                        border: const OutlineInputBorder(),
+                        suffixIcon: controllerOriginCity.text.isNotEmpty
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    predictions = [];
+                                    controllerOriginCity.clear();
+                                  });
+                                },
+                                icon: Icon(Icons.clear_outlined),
+                              )
+                            : null),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(seconds: 1), () {
                         if (value.isNotEmpty) {
                           autoCompleteSearch(value);
-                        } else {}
+                        } else {
+                          setState(() {
+                            predictions = [];
+                            startPosition = null;
+                          });
+                        }
                       });
                     },
-                    
                   ),
                 ),
                 Container(
@@ -162,19 +179,35 @@ class _RoutePageState extends State<RoutePage> {
                   child: TextField(
                     controller: controllerTargetCity,
                     focusNode: endFocusNode,
-                    decoration: const InputDecoration(
-                      labelText: "Cidade de Destino",
-                      border: OutlineInputBorder(),
-                    ),
+                    enabled: controllerOriginCity.text.isNotEmpty &&
+                        startPosition != null,
+                    decoration: InputDecoration(
+                        labelText: "Cidade de Destino",
+                        border: const OutlineInputBorder(),
+                        suffixIcon: controllerTargetCity.text.isNotEmpty
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    predictions = [];
+                                    controllerTargetCity.clear();
+                                  });
+                                },
+                                icon: Icon(Icons.clear_outlined),
+                              )
+                            : null),
                     onChanged: (value) {
                       if (_debounce?.isActive ?? false) _debounce!.cancel();
                       _debounce = Timer(const Duration(seconds: 1), () {
                         if (value.isNotEmpty) {
                           autoCompleteSearch(value);
-                        } else {}
+                        } else {
+                          setState(() {
+                            predictions = [];
+                            endPosition = null;
+                          });
+                        }
                       });
                     },
-                    
                   ),
                 ),
                 ListView.builder(
@@ -225,13 +258,43 @@ class _RoutePageState extends State<RoutePage> {
                       'AVANÇAR',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (startPosition != null &&
+                          endPosition != null &&
+                          controllerArrival.text.isNotEmpty &&
+                          controllerDeparture.text.isNotEmpty) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: ((context) => MapScreen(startPosition: startPosition, endPosition: endPosition)),
+                          ),
+                        );
+                      } else {
+                        showModal();
+                      }
+                    },
                   ),
                 )
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  showModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('Preencha todos os campos para continuar!'),
+        actions: <TextButton>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Fechar'),
+          )
+        ],
       ),
     );
   }

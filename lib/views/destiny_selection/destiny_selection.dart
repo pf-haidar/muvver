@@ -14,6 +14,8 @@ class DestinySelection extends StatefulWidget {
 }
 
 class _DestinySelectionState extends State<DestinySelection> {
+  Map<String, dynamic> tripInfo = {};
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -58,7 +60,7 @@ class _DestinySelectionState extends State<DestinySelection> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: TabBarView(        
           children: [
             RoutePage(),
             MapPage(),
