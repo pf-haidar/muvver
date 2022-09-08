@@ -8,7 +8,7 @@ As APIs funcionarão até Novembro de 2022, após esse período desativarei para
 
 ## APK repositório
 
-- Android: ()
+- Android: [APK](https://drive.google.com/file/d/1X2zIFqJ8ZeDglOrhM8umkxblFbK8tN4_/view?usp=sharing)
 
 **Versão Mínima do OS**
 
