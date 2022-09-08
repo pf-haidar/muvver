@@ -37,9 +37,8 @@ class _MapScreenState extends State<MapScreen> {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: const Color.fromRGBO(36, 185, 110, 1),
+      color: Colors.red,
       points: polylineCoordinates,
-      width: 1,
     );
     polylines[id] = polyline;
     setState(() {});
