@@ -2,6 +2,7 @@
 
 Projeto em Flutter desenvolvido para Teste Técnico para JeraApp.
 
+- [Vídeo de Demonstração](https://www.youtube.com/watch?v=Hd6IKiMEiIE&ab_channel=DevHaidar)
 ## ATENÇÃO
 
 As APIs funcionarão até Novembro de 2022, após esse período desativarei para evitar cobranças adicionais.
