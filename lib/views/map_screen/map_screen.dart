@@ -46,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
 
   _getPolyline() async {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        'AIzaSyBW2JTkJNYLh3PUOS4ejgowK7fXGCHqrIk',
+        '',
         PointLatLng(widget.startPosition!.geometry!.location!.lat!,
             widget.startPosition!.geometry!.location!.lng!),
         PointLatLng(widget.endPosition!.geometry!.location!.lat!,
