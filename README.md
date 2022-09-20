@@ -1,15 +1,10 @@
 # muvver
 
-Projeto em Flutter desenvolvido para Teste Técnico para JeraApp.
+Projeto em Flutter desenvolvido para aprendizado de APIs de localização da Google.
 
-- [Vídeo de Demonstração](https://www.youtube.com/watch?v=Hd6IKiMEiIE&ab_channel=DevHaidar)
 ## ATENÇÃO
 
-As APIs funcionarão até Novembro de 2022, após esse período desativarei para evitar cobranças adicionais.
-
-## APK repositório
-
-- Android: [APK](https://drive.google.com/file/d/1X2zIFqJ8ZeDglOrhM8umkxblFbK8tN4_/view?usp=sharing)
+As APIs não estão funcionando, necessário adicionar sua própria API Key.
 
 **Versão Mínima do OS**
 
